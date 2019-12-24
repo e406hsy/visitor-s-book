@@ -8,11 +8,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
 
 /**
  * Servlet Filter implementation class CharacterEncodingFilter
  */
-@WebFilter("/CharacterEncodingFilter")
+@WebFilter(urlPatterns = {"/saver"}, initParams= {@WebInitParam(name="encoding", value="UTF-8")})
 public class CharacterEncodingFilter implements Filter {
 	FilterConfig config;
     /**
@@ -35,7 +36,7 @@ public class CharacterEncodingFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		// place your code here
-		request.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding(this.config.getInitParameter("encoding"));
 		// pass the request along the filter chain
 		chain.doFilter(request, response);
 	}

@@ -3,11 +3,7 @@ package server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,7 +33,6 @@ public class saver extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.setCharacterEncoding("UTF-8");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String content = request.getParameter("content");
@@ -57,11 +52,7 @@ public class saver extends HttpServlet {
 
 		try {
 			ServletContext sc = this.getServletContext();
-			Class.forName(sc.getInitParameter("driver"));
-			conn = DriverManager.getConnection(
-					sc.getInitParameter("url"), // JDBC URL
-					sc.getInitParameter("username"), // DBMS 사용자 아이디
-					sc.getInitParameter("password")); // DBMS 사용자 암호
+			conn = (Connection)sc.getAttribute("conn");
 			stmt = conn.prepareStatement("INSERT INTO BOOK(EMAIL,PASSWORD,CONTENT,GEN_TIME)" + " VALUES (?,?,?,NOW())");
 			stmt.setString(1, request.getParameter("email"));
 			stmt.setString(2, request.getParameter("password"));
@@ -76,11 +67,6 @@ public class saver extends HttpServlet {
 			try {
 				if (stmt != null)
 					stmt.close();
-			} catch (Exception e) {
-			}
-			try {
-				if (conn != null)
-					conn.close();
 			} catch (Exception e) {
 			}
 		}
