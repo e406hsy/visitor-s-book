@@ -1,13 +1,13 @@
 package server.vo;
 
-import java.util.Date;
+import java.sql.Timestamp;;
 
 public class Book {
 	protected String email;
 	protected String password;
 	protected String content;
-	protected Date gen_time;
-	protected Date change_time;
+	protected Timestamp gen_time;
+	protected Timestamp change_time;
 	public String getEmail() {
 		return email;
 	}
@@ -17,10 +17,10 @@ public class Book {
 	public String getContent() {
 		return content;
 	}
-	public Date getGen_time() {
+	public Timestamp getGen_time() {
 		return gen_time;
 	}
-	public Date getChange_time() {
+	public Timestamp getChange_time() {
 		return change_time;
 	}
 
@@ -36,11 +36,11 @@ public class Book {
 		this.content= content;
 		return this;
 	}
-	public Book setGenTime(Date gen_time) {
+	public Book setGenTime(Timestamp gen_time) {
 		this.gen_time= gen_time;
 		return this;
 	}
-	public Book setChangeTime(Date change_time) {
+	public Book setChangeTime(Timestamp change_time) {
 		this.change_time= change_time;
 		return this;
 	}

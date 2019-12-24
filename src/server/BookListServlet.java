@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -46,12 +47,12 @@ public class BookListServlet extends HttpServlet {
 			ServletContext sc = this.getServletContext();
 			conn = (Connection) sc.getAttribute("conn");
 			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT EMAIL,GEN_TIME,CHANGE_TIME,CONTENT " + " FROM BOOK");
+			rs = stmt.executeQuery("SELECT EMAIL,GEN_TIME,CHANGE_TIME,CONTENT " + " FROM BOOK" + " ORDER BY GEN_TIME ASC");
 
 			ArrayList<Book> books = new ArrayList<Book>();
 			while (rs.next()) {
-				books.add(new Book().setEmail(rs.getString("EMAIL")).setGenTime(rs.getDate("GEN_TIME"))
-						.setChangeTime(rs.getDate("CHANGE_TIME")).setContent(rs.getString("CONTENT")));
+				books.add(new Book().setEmail(rs.getString("EMAIL")).setGenTime(rs.getTimestamp("GEN_TIME"))
+						.setChangeTime(rs.getTimestamp("CHANGE_TIME")).setContent(rs.getString("CONTENT")));
 			}
 
 			request.setAttribute("books", books);
