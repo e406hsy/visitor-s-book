@@ -1,5 +1,4 @@
 <%@ page import="server.vo.Book" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -13,9 +12,9 @@
 </head>
 <body>
 <h1>방명록</h1>
+<jsp:useBean id="books" scope="request" class="java.util.ArrayList" type="java.util.ArrayList<server.vo.Book>"></jsp:useBean>
 <%
 SimpleDateFormat format1 = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
-ArrayList<Book> books = (ArrayList<Book>)request.getAttribute("books");
 for (Book book : books){
 %>
 <p> 이메일 : <%= book.getEmail() %> </p>
