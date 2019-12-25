@@ -1,12 +1,13 @@
 package server.listener;
 
+import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import javax.sql.DataSource;
 
 import server.dao.BookDao;
-import server.util.DBConnectionPool;
 
 /**
  * Application Lifecycle Listener implementation class ContextLoaderListener
@@ -14,7 +15,6 @@ import server.util.DBConnectionPool;
  */
 @WebListener
 public class ContextLoaderListener implements ServletContextListener {
-	DBConnectionPool connPool;
 
 	/**
 	 * Default constructor.
@@ -27,7 +27,6 @@ public class ContextLoaderListener implements ServletContextListener {
 	 * @see ServletContextListener#contextDestroyed(ServletContextEvent)
 	 */
 	public void contextDestroyed(ServletContextEvent sce) {
-		connPool.closeAll();
 	}
 
 	/**
@@ -36,15 +35,12 @@ public class ContextLoaderListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		try {
 			ServletContext application = sce.getServletContext();
-
-			connPool = new DBConnectionPool(
-					application.getInitParameter("driver"),
-					application.getInitParameter("url"),
-					application.getInitParameter("username"),
-					application.getInitParameter("password"));
+			
+			InitialContext initialContext = new InitialContext();
+			DataSource ds = (DataSource)initialContext.lookup("java:comp/env/jdbc/visitor-s-book");
 			
 			BookDao bookDao = new BookDao();
-			bookDao.setConnPool(connPool);
+			bookDao.setDataSource(ds);
 
 			application.setAttribute("bookDao", bookDao);
 		} catch (Throwable e) {

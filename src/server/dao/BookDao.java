@@ -7,21 +7,22 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import server.util.DBConnectionPool;
+import javax.sql.DataSource;
+
 import server.vo.Book;
 
 public class BookDao {
-	DBConnectionPool connPool;
-	
-	public void setConnPool(DBConnectionPool connPool) {
-		this.connPool = connPool;
+	DataSource ds;
+
+	public void setDataSource(DataSource ds) {
+		this.ds = ds;
 	}
 
 	public int insert(Book book) throws Exception {
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		try {
-			connection = connPool.getConnection();
+			connection = ds.getConnection();
 			stmt = connection
 					.prepareStatement("INSERT INTO BOOK(EMAIL,PASSWORD,CONTENT,GEN_TIME)" + " VALUES (?,?,?,NOW())");
 			stmt.setString(1, book.getEmail());
@@ -36,6 +37,11 @@ public class BookDao {
 					stmt.close();
 			} catch (Exception e) {
 			}
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (Exception e) {
+			}
 		}
 	}
 
@@ -45,7 +51,7 @@ public class BookDao {
 		ResultSet rs = null;
 
 		try {
-			connection = connPool.getConnection();
+			connection = ds.getConnection();
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery(
 					"SELECT EMAIL,GEN_TIME,CHANGE_TIME,CONTENT " + " FROM BOOK" + " ORDER BY GEN_TIME ASC");
@@ -67,6 +73,11 @@ public class BookDao {
 			try {
 				if (stmt != null)
 					stmt.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (connection != null)
+					connection.close();
 			} catch (Exception e) {
 			}
 		}

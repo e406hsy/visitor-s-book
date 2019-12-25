@@ -1,6 +1,9 @@
 package server;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,16 +40,20 @@ public class saver extends HttpServlet {
 		String password = request.getParameter("password");
 		String content = request.getParameter("content");
 
-		try {
-			ServletContext application = this.getServletContext();
-			BookDao bookDao = (BookDao) application.getAttribute("bookDao");
+		Pattern emailPattern = Pattern.compile("^([a-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})$");
+		Matcher emailMatcher = emailPattern.matcher(email);
+		if (emailMatcher.find()) {
+			try {
+				ServletContext application = this.getServletContext();
+				BookDao bookDao = (BookDao) application.getAttribute("bookDao");
 
-			Book book = new Book().setEmail(email).setPassword(password).setContent(content);
+				Book book = new Book().setEmail(email).setPassword(password).setContent(content);
 
-			bookDao.insert(book);
+				bookDao.insert(book);
 
-		} catch (Exception e) {
-			throw new ServletException(e);
+			} catch (Exception e) {
+				throw new ServletException(e);
+			}
 		}
 		response.sendRedirect("index");
 	}
