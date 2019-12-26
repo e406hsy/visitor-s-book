@@ -40,7 +40,7 @@ public class saver extends HttpServlet {
 		String password = request.getParameter("password");
 		String content = request.getParameter("content");
 
-		Pattern emailPattern = Pattern.compile("^([a-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})$");
+		Pattern emailPattern = Pattern.compile("^([a-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]+)$");
 		Matcher emailMatcher = emailPattern.matcher(email);
 		if (emailMatcher.find()) {
 			try {
@@ -49,7 +49,8 @@ public class saver extends HttpServlet {
 
 				Book book = new Book().setEmail(email).setPassword(password).setContent(content);
 
-				bookDao.insert(book);
+				if (bookDao.insert(book)==0)
+					System.out.println("fail to insert");
 
 			} catch (Exception e) {
 				throw new ServletException(e);

@@ -3,11 +3,16 @@ package server.vo;
 import java.sql.Timestamp;;
 
 public class Book {
+	protected int id;
 	protected String email;
 	protected String password;
 	protected String content;
 	protected Timestamp gen_time;
 	protected Timestamp change_time;
+
+	public int getId() {
+		return id;
+	}
 
 	public String getEmail() {
 		return email;
@@ -27,6 +32,11 @@ public class Book {
 
 	public Timestamp getChange_time() {
 		return change_time;
+	}
+	
+	public Book setId(int id) {
+		this.id = id;
+		return this;
 	}
 
 	public Book setEmail(String email) {
