@@ -53,19 +53,14 @@ public class saver extends HttpServlet {
 
 				if (bookDao.insert(book) == 0) {
 					System.out.println("fail to insert");
-					response.sendRedirect("index");
-				} else {
-					request.setAttribute("book", bookDao.find(book));
-					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/BookJSP.jsp");
-					rd.forward(request, response);
 				}
 
 			} catch (Exception e) {
 				throw new ServletException(e);
 			}
-		} else {
-			response.sendRedirect("index");
 		}
+		response.sendRedirect("index");
+
 	}
 
 	/**
