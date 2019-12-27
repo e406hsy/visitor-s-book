@@ -20,7 +20,6 @@ import server.vo.Book;
  * Servlet implementation class saver
  */
 @WebServlet("/saver")
-@MultipartConfig
 public class saver extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
