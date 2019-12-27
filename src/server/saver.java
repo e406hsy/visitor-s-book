@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,7 @@ import server.vo.Book;
  * Servlet implementation class saver
  */
 @WebServlet("/saver")
+@MultipartConfig
 public class saver extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -35,7 +38,6 @@ public class saver extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String content = request.getParameter("content");
@@ -49,14 +51,21 @@ public class saver extends HttpServlet {
 
 				Book book = new Book().setEmail(email).setPassword(password).setContent(content);
 
-				if (bookDao.insert(book)==0)
+				if (bookDao.insert(book) == 0) {
 					System.out.println("fail to insert");
+					response.sendRedirect("index");
+				} else {
+					request.setAttribute("book", bookDao.find(book));
+					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/BookJSP.jsp");
+					rd.forward(request, response);
+				}
 
 			} catch (Exception e) {
 				throw new ServletException(e);
 			}
+		} else {
+			response.sendRedirect("index");
 		}
-		response.sendRedirect("index");
 	}
 
 	/**

@@ -45,12 +45,12 @@
 		}
 	%>
 	<h1>방명록 작성하기</h1>
-	<form action="saver" method="post">
-		<p>이메일</p>
+	<form id="addBook" action="javascript:saver()" method="post">
+		<p>이메일 :</p>
 		<input type="email" name="email" style="width: 500px">
-		<p>비밀번호</p>
+		<p>비밀번호 :</p>
 		<input type="password" name="password" style="width: 500px">
-		<p>본문</p>
+		<p>본문내용 :</p>
 		<input type="text" name="content" style="width: 500px; height: 300px"><br>
 		<input type="submit" value="등록">
 	</form>
@@ -63,8 +63,8 @@
 		div.innerHTML = email.outerHTML
 				+ gen_time.outerHTML
 				+ "<form id="+id+" action=\"modifyDB\" method=\"post\">"
+				+ "<p>본문내용 :</p><input type=\"text\" name=\"content\" style=\"width:500px; height:300px\"><br>"
 				+ "<p>비밀번호</p><input type=\"password\" name=\"password\" style=\"width:500px\">"
-				+ "<p>본문</p><input type=\"text\" name=\"content\" style=\"width:500px; height:300px\"><br>"
 				+ "<button onclick=\"modifier("+id+")\">수정</button></form>";
 	}
 	function modifier(id){
@@ -75,6 +75,50 @@
 	    input.setAttribute('value', id);//set the value
 	    input.setAttribute('type', "text");//set the type, like "hidden" or other
 	    form.appendChild(input);
+	}
+	function saver() {
+		var body = document.getElementsByTagName("body")[0];
+		var form = document.getElementById("addBook")
+		var formData = new FormData(form);
+		var request = new XMLHttpRequest();
+		request.open("POST", "./saver");
+		request.responseType = 'document';
+		request.overrideMimeType('text/xml');
+
+		request.onload = function() {
+			if (request.readyState === request.DONE && request.status === 200) {
+				insertBookNode(request.responseXML);
+			}
+		}
+		request.send(formData);
+	}
+	function insertBookNode(xml){
+		var data = xml.childNodes[0].childNodes;
+		var newNode = document.createElement("div");
+		for (step=0; step<data.length;step++){
+			var tagName = data[step].tagName;
+			var text = data[step].textContent
+			if (tagName=="id"){
+				newNode.setAttribute("id",text);
+				var buttonNode = document.createElement("button");
+				buttonNode.setAttribute("onclick", "modify("+text+")");
+				buttonNode.innerText="수정";
+				newNode.appendChild(buttonNode);
+				continue;
+			}
+			var pNode = document.createElement("p");
+			pNode.setAttribute("class", tagName);
+			if (tagName=="email")
+				pNode.innerText = "이메일 : "+text;
+			else if (tagName=="gen_time")
+				pNode.innerText = "작성시간 : "+text;
+			else if (tagName=="content")
+				pNode.innerText = "본문내용 : "+text;
+			newNode.appendChild(pNode);
+		}
+		var body = document.getElementsByTagName("body")[0];
+		body.insertBefore(document.createElement("br"), body.childNodes[2]);
+		body.insertBefore(newNode, body.childNodes[2]);
 	}
 </script>
 </html>

@@ -17,7 +17,6 @@ public class BookDao {
 	public void setDataSource(DataSource ds) {
 		this.ds = ds;
 	}
-
 	public int insert(Book book) throws Exception {
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -44,6 +43,40 @@ public class BookDao {
 			}
 		}
 	}
+	public Book find(Book book) throws Exception {
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			connection = ds.getConnection();
+			stmt = connection
+					.prepareStatement("SELECT * FROM BOOK WHERE email=? AND password=? AND content=?");
+			stmt.setString(1, book.getEmail());
+			stmt.setString(2, book.getPassword());
+			stmt.setString(3, book.getContent());
+			rs = stmt.executeQuery();
+			Book answer = null;
+			if (rs.next()) {
+				answer = new Book().setId(rs.getInt("ID")).setEmail(rs.getString("EMAIL")).setGenTime(rs.getTimestamp("GEN_TIME"))
+						.setChangeTime(rs.getTimestamp("CHANGE_TIME")).setContent(rs.getString("CONTENT"));
+			}
+			return answer;
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (Exception e) {
+			}
+		}
+	}
+
 
 	public List<Book> selectList() throws Exception {
 		Connection connection = null;

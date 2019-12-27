@@ -20,7 +20,6 @@ public class ContextLoaderListener implements ServletContextListener {
 	 * Default constructor.
 	 */
 	public ContextLoaderListener() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

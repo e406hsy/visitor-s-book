@@ -13,7 +13,7 @@ import javax.servlet.annotation.WebInitParam;
 /**
  * Servlet Filter implementation class CharacterEncodingFilter
  */
-@WebFilter(urlPatterns = {"/saver"}, initParams= {@WebInitParam(name="encoding", value="UTF-8")})
+//@WebFilter(urlPatterns = {"/saver"}, initParams= {@WebInitParam(name="encoding", value="UTF-8")})
 public class CharacterEncodingFilter implements Filter {
 	FilterConfig config;
     /**
